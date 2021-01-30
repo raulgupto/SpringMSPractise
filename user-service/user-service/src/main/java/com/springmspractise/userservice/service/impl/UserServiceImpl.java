@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
         }
 
         if(null != user.getDepartmentId()){
-            department = restTemplate.getForObject("http://localhost:9200/departments/" + user.getDepartmentId(), Department.class);
+            department = restTemplate.getForObject("http://DEPARTMENT-SERVICE/departments/" + user.getDepartmentId(), Department.class);
         } else{
             log.info("Department details not found!");
         }
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
                 .map(s -> s.trim().toLowerCase())
                 .collect(Collectors.toList());
 
-        ResponseEntity<Movie[]> responseEntityResponseEntity = restTemplate.postForEntity("http://localhost:9203/movies/getMoviesByGenreIn",new HttpEntity<>(userInterests), Movie[].class);
+        ResponseEntity<Movie[]> responseEntityResponseEntity = restTemplate.postForEntity("http://MOVIE-SERVICE/movies/getMoviesByGenreIn",new HttpEntity<>(userInterests), Movie[].class);
         if(null != responseEntityResponseEntity.getBody()){
 
             movies = Arrays.stream(responseEntityResponseEntity.getBody())
