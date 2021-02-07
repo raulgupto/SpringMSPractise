@@ -4,6 +4,8 @@ import com.springmspractise.movieservice.entity.Movie;
 import com.springmspractise.movieservice.repository.MovieRepository;
 import com.springmspractise.movieservice.service.MovieService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -29,7 +31,7 @@ public class MovieServiceImpl implements MovieService {
     public List<Movie> addMovies(List<Movie> movies) {
         log.info("Inside addMovies");
         List<Movie> result = null;
-            result = movieRepository.saveAll(movies);
+        result = movieRepository.saveAll(movies);
 
         return result;
     }
@@ -55,5 +57,25 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<Movie> getHighRatedMovies(String rating) {
         return movieRepository.findMoviesByRatingGreaterThanEqual(rating == null ? 8: Double.parseDouble(rating));
+    }
+
+    @Override
+    public Page<Movie> getAllMovies(Pageable pageable) {
+        return movieRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Movie> getMoviesByGenre(String genre, Pageable pageable) {
+        return movieRepository.findByGenreIgnoreCase(genre, pageable);
+    }
+
+    @Override
+    public Page<Movie> getMoviesByGenreInPage(List<String> list, Pageable pageable) {
+        return movieRepository.findMoviesByGenreIgnoreCaseIsIn(list, pageable);
+    }
+
+    @Override
+    public Page<Movie> getHighRatedMovies(String rating, Pageable pageable) {
+        return movieRepository.findMoviesByRatingGreaterThanEqual(rating == null ? 8: Double.parseDouble(rating), pageable);
     }
 }
